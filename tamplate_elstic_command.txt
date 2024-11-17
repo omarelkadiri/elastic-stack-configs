@@ -6,14 +6,12 @@ PUT _index_template/network-logs-packetbeat-template
       "properties": {
         "source": {
           "properties": {
-            "ip": { "type": "ip" },
-            "geo":{"type": "geo_point"}
+            "ip": { "type": "ip" }
           }
         },
         "destination": {
           "properties": {
-            "ip": { "type": "ip" },
-            "geo": { "type": "geo_point" }
+            "ip": { "type": "ip" }
           }
         }
       }
