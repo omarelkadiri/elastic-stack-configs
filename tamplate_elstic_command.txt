@@ -1,0 +1,69 @@
+PUT _index_template/network-logs-packetbeat-template
+{
+  "index_patterns": ["network-logs-packetbeat-*"], 
+  "template": {
+    "mappings": {
+      "properties": {
+        "source": {
+          "properties": {
+            "ip": { "type": "ip" },
+            "geo":{"type": "geo_point"}
+          }
+        },
+        "destination": {
+          "properties": {
+            "ip": { "type": "ip" },
+            "geo": { "type": "geo_point" }
+          }
+        }
+      }
+    }
+  },
+  "priority": 300
+}
+
+
+PUT _index_template/network-logs-template
+{
+  "index_patterns": ["network-logs-syslog-*"], 
+  "template": {
+    "mappings": {
+      "properties": {
+        "source": {
+          "properties": {
+            "ip": { "type": "ip" },
+            "port": { "type": "integer" }
+          }
+        },
+        "destination": {
+          "properties": {
+            "ip": { "type": "ip" },
+            "port": { "type": "integer" }
+          }
+        },
+        "network": {
+          "properties": {
+            "bytes": { "type": "long" },
+            "tos": { "type": "integer" },
+            "flags": { "type": "keyword" },
+            "transport": { "type": "keyword" }
+          }
+        },
+        "rule": {
+          "properties": {
+            "id": { "type": "integer" }
+          }
+        },
+        "icmp": {
+          "properties": {
+            "version": { "type": "integer" }
+          }
+        },
+        "ttl": { "type": "integer" },
+        "id_packet": { "type": "integer" },
+        "num_protocol": { "type": "integer" }
+      }
+    }
+  },
+  "priority": 200
+}
