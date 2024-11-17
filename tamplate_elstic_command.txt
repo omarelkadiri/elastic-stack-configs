@@ -23,7 +23,7 @@ PUT _index_template/network-logs-packetbeat-template
 }
 
 
-PUT _index_template/network-logs-template
+PUT _index_template/network-logs-syslog-template
 {
   "index_patterns": ["network-logs-syslog-*"], 
   "template": {
