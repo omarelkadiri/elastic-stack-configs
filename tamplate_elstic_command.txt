@@ -1,17 +1,43 @@
 PUT _index_template/network-logs-packetbeat-template
 {
-  "index_patterns": ["network-logs-packetbeat-*"], 
+  "index_patterns": ["network-logs-packetbeat-*"],
   "template": {
     "mappings": {
       "properties": {
         "source": {
           "properties": {
-            "ip": { "type": "ip" }
+            "ip": { "type": "ip" },
+            "geo": {
+              "properties": {
+                "city_name": { "type": "keyword" },
+                "location": { "type": "geo_point" },
+                "continent_code": { "type": "keyword" },
+                "region_iso_code": { "type": "keyword" },
+                "postal_code": { "type": "keyword" },
+                "timezone": { "type": "keyword" },
+                "country_name": { "type": "keyword" },
+                "country_iso_code": { "type": "keyword" },
+                "region_name": { "type": "keyword" }
+              }
+            }
           }
         },
         "destination": {
           "properties": {
-            "ip": { "type": "ip" }
+            "ip": { "type": "ip" },
+            "geo": {
+              "properties": {
+                "city_name": { "type": "keyword" },
+                "location": { "type": "geo_point" },
+                "continent_code": { "type": "keyword" },
+                "region_iso_code": { "type": "keyword" },
+                "postal_code": { "type": "keyword" },
+                "timezone": { "type": "keyword" },
+                "country_name": { "type": "keyword" },
+                "country_iso_code": { "type": "keyword" },
+                "region_name": { "type": "keyword" }
+              }
+            }
           }
         }
       }
@@ -23,20 +49,46 @@ PUT _index_template/network-logs-packetbeat-template
 
 PUT _index_template/network-logs-syslog-template
 {
-  "index_patterns": ["network-logs-syslog-*"], 
+  "index_patterns": ["network-logs-syslog-*"],
   "template": {
     "mappings": {
       "properties": {
         "source": {
           "properties": {
             "ip": { "type": "ip" },
-            "port": { "type": "integer" }
+            "port": { "type": "integer" },
+            "geo": {
+              "properties": {
+                "city_name": { "type": "keyword" },
+                "location": { "type": "geo_point" },
+                "continent_code": { "type": "keyword" },
+                "region_iso_code": { "type": "keyword" },
+                "postal_code": { "type": "keyword" },
+                "timezone": { "type": "keyword" },
+                "country_name": { "type": "keyword" },
+                "country_iso_code": { "type": "keyword" },
+                "region_name": { "type": "keyword" }
+              }
+            }
           }
         },
         "destination": {
           "properties": {
             "ip": { "type": "ip" },
-            "port": { "type": "integer" }
+            "port": { "type": "integer" },
+            "geo": {
+              "properties": {
+                "city_name": { "type": "keyword" },
+                "location": { "type": "geo_point" },
+                "continent_code": { "type": "keyword" },
+                "region_iso_code": { "type": "keyword" },
+                "postal_code": { "type": "keyword" },
+                "timezone": { "type": "keyword" },
+                "country_name": { "type": "keyword" },
+                "country_iso_code": { "type": "keyword" },
+                "region_name": { "type": "keyword" }
+              }
+            }
           }
         },
         "network": {
