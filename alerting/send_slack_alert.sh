@@ -1,5 +1,6 @@
+#!/bin/bash
+message="$1"
 send_slack_alert() {
-    local message="$1"
     local slack_webhook_url="https://hooks.slack.com/services/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" # URL Webhook Slack
 
     # Structure du message au format JSON
@@ -15,5 +16,4 @@ EOF
     --data "$payload" \
     "$slack_webhook_url"
 }
-#send_slack_alert "Test message"
-
+send_slack_alert
