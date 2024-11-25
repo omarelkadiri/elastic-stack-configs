@@ -1,9 +1,16 @@
 #!/bin/bash
 
-alert_THRESHOLD=5
+alert_THRESHOLD=5  # Seuil d'alertes pour les IP bloquées
 elastic_URL="https://node1.elastic.test.com:9200"
 elastic_USER=elastic
 elastic_PWD=147896325
+
+# Répertoire pour les sauvegardes
+LOG_DIR="/home/omar/alerting/logs/check_blocked_packets_logs"
+mkdir -p "$LOG_DIR"
+
+# Fichier log pour la journée en cours
+LOG_FILE="$LOG_DIR/blocked_packets_alerts_$(date +'%Y-%m-%d').log"
 
 check_blocked_packets() {
     # Requête ElasticSearch pour les paquets bloqués
@@ -48,11 +55,12 @@ check_blocked_packets() {
         BLOCKED_COUNT=$(echo $blocked_info | jq -r '.doc_count')  # Nombre de paquets bloqués
         
         # Construire le message Slack
-        SAFE_MESSAGE=$(printf "Une activité suspecte détectée : L'adresse IP %s a été bloquée %s fois au cours de la dernière minute." "$BLOCKED_IP" "$BLOCKED_COUNT" | sed 's/"/\\"/g')
+        ALERT_MESSAGE=$(printf "Activité suspecte détectée : L'adresse IP %s a été bloquée %d fois au cours de la dernière minute." "$BLOCKED_IP" "$BLOCKED_COUNT")
+        /home/omar/alerting/scripts/send_slack_alert.sh "$ALERT_MESSAGE"
 
-        # Envoyer l'alerte à Slack
-        PAYLOAD=$SAFE_MESSAGE
-        /home/omar/elastic-config-backup/alerting/send_slack_alert.sh "$PAYLOAD"
+        # Sauvegarder l'alerte dans un fichier log
+        ALERT_LOG=$(printf '{"timestamp":"%s","blocked_ip":"%s","blocked_count":%d}\n' "$(date +'%Y-%m-%dT%H:%M:%S')" "$BLOCKED_IP" "$BLOCKED_COUNT")
+        echo "$ALERT_LOG" >> "$LOG_FILE"
     done
 }
 

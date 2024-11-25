@@ -1,0 +1,6 @@
+crontab -e 
+#Ajouter les lignes suivantes :
+* * * * * bash /home/omar/alerting/scripts/check_blocked_packets.sh 
+* * * * * bash /home/omar/alerting/scripts/check_brute_force_user.sh 
+* * * * * bash /home/omar/alerting/scripts/check_dos.sh 
+

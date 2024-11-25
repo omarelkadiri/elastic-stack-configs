@@ -1,7 +1,16 @@
+#!/bin/bash
+
 alert_THRESHOLD=10
 elastic_URL="https://node1.elastic.test.com:9200"
 elastic_USER=elastic
 elastic_PWD=147896325
+
+# Répertoire pour les sauvegardes
+LOG_DIR="/home/omar/alerting/logs/check_dos_logs"
+mkdir -p "$LOG_DIR"
+
+# Fichier log pour la journée en cours
+LOG_FILE="$LOG_DIR/dos_alerts_$(date +'%Y-%m-%d').log"
 
 check_dos() {
     response=$(curl -u $elastic_USER:$elastic_PWD -k -X POST "$elastic_URL/network-logs-syslog-*/_search" -H 'Content-Type: application/json' -d'
@@ -44,12 +53,16 @@ check_dos() {
         # Construire la liste des attaquants
         ATTACKERS=$(echo $target_info | jq -c '.top_attackers.buckets[] | "\(.key) (\(.doc_count) paquets)"' | paste -sd ', ' -)
         
-        # Échapper les caractères spéciaux pour Slack
+        # Construire le message pour Slack
         SAFE_MESSAGE=$(printf "Cible : %s subissant une possible attaque DoS/DDoS avec %s paquets. Sources : %s" "$TARGET_IP" "$TOTAL_PACKETS" "$ATTACKERS" | sed 's/"/\\"/g')
 
         # Envoyer l'alerte à Slack
         PAYLOAD=$SAFE_MESSAGE
-        /home/omar/elastic-config-backup/alerting/send_slack_alert.sh "$PAYLOAD"
+        /home/omar/alerting/scripts/send_slack_alert.sh "$PAYLOAD"
+
+        # Sauvegarder l'alerte dans un fichier log
+        ALERT_LOG=$(printf '{"timestamp":"%s","target_ip":"%s","total_packets":%s,"attackers":"%s"}\n' "$(date +'%Y-%m-%dT%H:%M:%S')" "$TARGET_IP" "$TOTAL_PACKETS" "$ATTACKERS")
+        echo "$ALERT_LOG" >> "$LOG_FILE"
     done
 }
 
